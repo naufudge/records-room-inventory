@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image"
-import rack from "../../public/assets/new-rack.png"
+import rack from "../../public/assets/border-rack-light.png"
 import { useEffect, useState } from "react"
 import Popup from "@/components/Popup";
 
@@ -14,7 +14,7 @@ export default function Home() {
   // const RackCss = "rack static mx-auto my-auto hover:cursor-pointer transition-all duration-300"
   const RackCss = "rack static mx-auto my-auto drop-shadow-lg"
   const rackMovement = "translate-y-[250px] mb-[250px]"
-  const labelCss = "absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-black font-semibold z-20"
+  const labelCss = "absolute px-2 lg:px-5 lg:py-2 rounded-full bg-[#D4A056] -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-white text-sm md:text-2xl font-semibold z-20"
 
   const handleMovement = (e) => {
     setDown(!down)
@@ -33,17 +33,14 @@ export default function Home() {
 
   return (
     <div className="mt-10">
-      
       <div className="relative grid grid-cols-2 gap-7 justify-center place-items-center mx-auto lg:w-3/5 w-11/12 opacity">
-      
-      <div id="1" className={RackParentCss}>
+      <div id="1" className={RackParentCss} onClick={() => handlePopup()}>
         <div className={labelCss}>R-1</div>
         <Image
         id="rack-1"
         src={rack}
         alt="rack"
         className={RackCss}
-        onClick={() => handlePopup()}
         />
       </div>
 
