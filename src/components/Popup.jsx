@@ -1,5 +1,3 @@
-
-
 const Popup = ({ show, close, rackName }) => {
     if (!show) return null;
 
