@@ -7,11 +7,6 @@ import Popup from "./Popup";
 import axios from 'axios';
 
 const Main = () => {
-    const [down, setDown] = useState(false)
-    // const [rackDetails, setRackDetails] = useState({
-    //     name: '',
-    //     items: []
-    // })
     const [rackDetails, setRackDetails] = useState(null)
     const [popup, showPopup] = useState(false)
     const [popupDetail, setPopupDetails] = useState({
@@ -57,22 +52,14 @@ const Main = () => {
         }
       }
       if (!rackDetails) getRecords();
-    }, [rackDetails])
+      if (popup) {
+        document.body.classList.add("overflow-y-hidden")
+      } else {
+        document.body.classList.remove("overflow-y-hidden")
+      }
+    }, [rackDetails, popup])
 
     const handlePopup = (detail) => {
-      // setRackDetails({...rackDetails, name: detail})
-
-      // try {
-      //     const response = await axios.get('api/rack')
-      //     const data = response.data.records
-      //     const rack_records = data[detail.toLowerCase()]
-      //     setRackDetails({...rackDetails, items: rack_records})
-      //     console.log(rackDetails);
-      //     showPopup(!popup)
-      //     return data
-      // } catch (error) {
-      //     console.log(error.message)
-      // }
       setPopupDetails({name: detail, items: rackDetails[detail.toLowerCase()]})
       showPopup(!popup)
     }
