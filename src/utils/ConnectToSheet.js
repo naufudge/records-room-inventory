@@ -1,11 +1,16 @@
 const xlsx = require('xlsx');
-// import * as xlsx from 'xlsx';
+const fs = require('fs');
 
-const workbook = xlsx.readFile("public/Records_Room_Floor_Plan.xlsx");
+const workbook = xlsx.readFile("\\\\10.12.29.55\\office\\Share File\\N a u F\\Records Room Floor Plan.xlsx");
 
 const records_floor_plan = (search = null) => {
+    // fetch("./src/Records Room Floor Plan.xlsx")
+    // .then((res) => res.arrayBuffer())
+    // .then((ab) => {
+    //   const workbook = xlsx.read(ab, { type: "array" });
+    //   console.log("html ", workbook);
+    // });
     var lowerCaseSheets = []
-    var results = []
     var output = {}
     const sheets = workbook.SheetNames
     sheets.filter((value) => {
@@ -13,6 +18,7 @@ const records_floor_plan = (search = null) => {
     })
 
     for (const sheet_num in sheets) {
+        var results = []
         var sheet_name = sheets[sheet_num]
         var sheet = workbook.Sheets[sheet_name]
         console.log(sheet_name)
@@ -26,6 +32,10 @@ const records_floor_plan = (search = null) => {
         }
         output[sheet_name.toLowerCase()] = results
     }
+
+
+    const jsonString = JSON.stringify(output, null, 4)
+    fs.writeFileSync('./public/records.json', jsonString)
 
     return output;
 
@@ -43,4 +53,5 @@ const records_floor_plan = (search = null) => {
     // }
 }
 
-console.log(records_floor_plan())
+// console.log(records_floor_plan())
+records_floor_plan()

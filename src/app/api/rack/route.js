@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 // const xlsx = require("xlsx");
-import { records_floor_plan } from "../../../utils/ConnectToSheet"
+// import { records_floor_plan } from "../../../utils/ConnectToSheet"
+import { connectToJson } from "../../../utils/connectToJson"
 
-const floor_plan = records_floor_plan()
+// const floor_plan = records_floor_plan()
 // const workbook = xlsx.readFile("src/test.xlsx");
 
 export async function GET(request) {
     try {
+        const records = connectToJson()
         console.log("reached");
-        const workbook = records_floor_plan()
-        console.log(workbook);
         
         // const {search} = await request.json()
         const response = NextResponse.json({
             status: 200,
-            workbook: workbook
+            records
         })
         return response;
     } catch (error) {

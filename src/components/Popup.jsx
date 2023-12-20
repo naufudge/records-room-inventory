@@ -1,4 +1,4 @@
-const Popup = ({ show, close, rackName }) => {
+const Popup = ({ show, close, rackName, rackItems }) => {
     if (!show) return null;
 
     const handlePopupClose = (e) => { if (e.target.id === "popup") close(false) }
@@ -16,12 +16,10 @@ const Popup = ({ show, close, rackName }) => {
                     onClick={() => close(false)}
                     >x</span>
                 </div>
-                <div className="text-white">
-                    <p>Test</p>
-                    <p>Test</p>
-                    <p>Test</p>
-                    <p>Test</p>
-                    <p>Test</p>
+                <div className="text-white text-sm">
+                    {rackItems?.map((item, index) => (
+                        <p id={index} className="">{item}</p>
+                    ))}
                 </div>
             </div>
         </div>
