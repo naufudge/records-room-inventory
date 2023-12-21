@@ -60,7 +60,11 @@ const Main = () => {
     }, [rackDetails, popup])
 
     const handlePopup = (detail) => {
-      setPopupDetails({name: detail, items: rackDetails[detail.toLowerCase()]})
+      try {
+        setPopupDetails({name: detail, items: rackDetails[detail.toLowerCase()]})
+      } catch (error) {
+        console.log(error.message)
+      }
       showPopup(!popup)
     }
 
