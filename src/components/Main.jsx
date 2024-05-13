@@ -5,6 +5,7 @@ import rack from "../../public/assets/border-rack-light.png"
 import { useState, useEffect } from "react"
 import Popup from "./Popup";
 import axios from 'axios';
+import SearchPopup from "./SearchPopup";
 
 const Main = () => {
     const [rackDetails, setRackDetails] = useState(null)
@@ -69,38 +70,38 @@ const Main = () => {
     }
 
     return (
-        <div className="my-10">
-      <div className="relative grid grid-cols-1 gap-7 justify-center place-items-center mx-auto lg:w-3/5 w-11/12 opacity">
-      {
-        rack_list.map((item, index) => (
-          <div key={index} className="grid grid-cols-2 gap-7">
-            <div id="1" className={RackParentCss} onClick={() => handlePopup(item[0])}>
-              <div className={labelCss}>{item[0]}</div>
-              <Image
-              id={index}
-              src={rack}
-              alt="rack"
-              className={RackCss}
-              />
-            </div>
-
-            {item[1] != "" ? 
-              <div className={RackParentCss} onClick={() => handlePopup(item[1])}>
-                <div className={labelCss}>{item[1]}</div>
+      <div className="my-10">
+        <div className="relative grid grid-cols-1 gap-7 justify-center place-items-center mx-auto lg:w-3/5 w-11/12 opacity">
+        {
+          rack_list.map((item, index) => (
+            <div key={index} className="grid grid-cols-2 gap-7">
+              <div id="1" className={RackParentCss} onClick={() => handlePopup(item[0])}>
+                <div className={labelCss}>{item[0]}</div>
                 <Image
                 id={index}
                 src={rack}
                 alt="rack"
-                className={`${RackCss} rotate-180`}
+                className={`${RackCss}`}
                 />
               </div>
-            : null }
-          </div>
-        ))
-      }
-      <Popup show={popup} close={showPopup} rackName={popupDetail.name} rackItems={popupDetail.items} />
+
+              {item[1] != "" ? 
+                <div className={RackParentCss} onClick={() => handlePopup(item[1])}>
+                  <div className={labelCss}>{item[1]}</div>
+                  <Image
+                  id={index}
+                  src={rack}
+                  alt="rack"
+                  className={`${RackCss} rotate-180`}
+                  />
+                </div>
+              : null }
+            </div>
+          ))
+        }
+        <Popup show={popup} close={showPopup} rackName={popupDetail.name} rackItems={popupDetail.items} />
+        </div>
       </div>
-    </div>
     )
 }
 

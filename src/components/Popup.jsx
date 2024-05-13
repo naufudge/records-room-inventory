@@ -19,7 +19,7 @@ const Popup = ({ show, close, rackName, rackItems }) => {
                     onClick={() => close(false)}
                     >x</span>
                 </div>
-                <div className={`text-white px-5 ${rackItems?.length > 18 ? "overflow-y-scroll" : ""}`}>
+                <div dir='rtl' className={`text-white px-5 ${rackItems?.length > 18 ? "overflow-y-scroll" : ""} text-lg`}>
                     {rackItems?.map((item, index) => (
                         <p id={index} className={farumaFont.className}>{item}</p>
                     ))}
