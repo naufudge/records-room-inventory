@@ -1,5 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
-import { connectToJson } from "../../../utils/connectToJson"
+import { NextResponse } from "next/server";
 import { connectToDB } from "../../../lib/mongo/database"
 import Racks from "../../../models/Racks"
 
@@ -7,7 +6,6 @@ connectToDB();
 
 export async function GET(request) {
     try {
-        // const records = connectToJson()
         const records = await Racks.find({})
         let results = {}
         records.filter((item) => {
