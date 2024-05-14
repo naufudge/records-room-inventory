@@ -5,7 +5,6 @@ import rack from "../../public/assets/border-rack-light.png"
 import { useState, useEffect } from "react"
 import Popup from "./Popup";
 import axios from 'axios';
-import SearchPopup from "./SearchPopup";
 
 const Main = () => {
     const [rackDetails, setRackDetails] = useState(null)
