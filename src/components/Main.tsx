@@ -5,8 +5,25 @@ import rack from "../../public/assets/border-rack-light.png"
 import { useState, useEffect } from "react"
 import Popup from "./Popup";
 import axios from 'axios';
+import { useRouter } from "next/navigation";
+
+interface SectionsType {
+  [key: string]: {
+    "_id": string,
+    "records": string[]
+  }
+}
+
+interface RackDetailsType {
+  "_id": string,
+  "rack": string,
+  "records": string[],
+  "sections": SectionsType,
+  "rack_route": string
+}
 
 const Main = () => {
+    const router = useRouter()
     const [rackDetails, setRackDetails] = useState(null)
     const [popup, showPopup] = useState(false)
     const [popupDetail, setPopupDetails] = useState({
@@ -15,26 +32,26 @@ const Main = () => {
     })
 
     const rack_list = [
-        ["R-9 A", "No Label"],
-        ["R-10 A", "R-7 B"],
-        ["R-10 B", "R-7 A"],
-        ["R-11 A", "R-6 B"],
-        ["R-11 B", "R-6 A"],
-        ["R-12 A", "R-5 B"],
-        ["R-12 B", "R-5 A"],
-        ["R-13 A", "R-4 B"],
-        ["R-13 B", "R-4 A"],
-        ["R-14 A", "R-3 B"],
-        ["R-14 B", "R-3 A"],
-        ["R-15 A", "R-2 B"],
-        ["R-15 B", "R-2 A"],
-        ["R-16 A", "R-1 A"],
-        ["R-16 B", ""],
-        ["R-17 A", ""],
-        ["R-17 B", ""],
-        ["R-18 A", ""],
-        ["R-18 B", ""],
-        ["R-19 A", ""],
+      ["R-9 A", "No Label"],
+      ["R-10 A", "R-7 B"],
+      ["R-10 B", "R-7 A"],
+      ["R-11 A", "R-6 B"],
+      ["R-11 B", "R-6 A"],
+      ["R-12 A", "R-5 B"],
+      ["R-12 B", "R-5 A"],
+      ["R-13 A", "R-4 B"],
+      ["R-13 B", "R-4 A"],
+      ["R-14 A", "R-3 B"],
+      ["R-14 B", "R-3 A"],
+      ["R-15 A", "R-2 B"],
+      ["R-15 B", "R-2 A"],
+      ["R-16 A", "R-1 A"],
+      ["R-16 B", ""],
+      ["R-17 A", ""],
+      ["R-17 B", ""],
+      ["R-18 A", ""],
+      ["R-18 B", ""],
+      ["R-19 A", ""],
     ]
     
     const RackParentCss = "relative hover:scale-110 hover:cursor-pointer transition-all duration-300"
@@ -44,14 +61,20 @@ const Main = () => {
     useEffect(()=> {
       const getRecords = async () => {
         try {
-          const response = await axios.get('api/rack')
-          const records = response.data.records
-          setRackDetails(records)
+          const response = await axios.get('http://10.12.29.68:8000/racks/')
+          const records: RackDetailsType[] = response.data
+          let results = {}
+          records.filter((item) => {
+            results[item.rack.toLowerCase()] = item.records
+          })
+
+          setRackDetails(results)
         } catch (error) {
           console.log(error.message)
         }
       }
       if (!rackDetails) getRecords();
+
       if (popup) {
         document.body.classList.add("overflow-y-hidden")
       } else {
@@ -59,13 +82,14 @@ const Main = () => {
       }
     }, [rackDetails, popup])
 
-    const handlePopup = (detail) => {
+    const handlePopup = (detail: string) => {
       try {
-        setPopupDetails({name: detail, items: rackDetails[detail.toLowerCase()]})
+        // setPopupDetails({name: detail, items: rackDetails[detail.toLowerCase()]})
+        router.push(`racks/${detail.toLowerCase().replace(" ", "-")}`)
       } catch (error) {
         console.log(error.message)
       }
-      showPopup(!popup)
+      // showPopup(!popup)
     }
 
     return (
@@ -77,7 +101,7 @@ const Main = () => {
               <div id="1" className={RackParentCss} onClick={() => handlePopup(item[0])}>
                 <div className={labelCss}>{item[0]}</div>
                 <Image
-                id={index}
+                id={index.toString()}
                 src={rack}
                 alt="rack"
                 className={`${RackCss}`}
@@ -88,7 +112,7 @@ const Main = () => {
                 <div className={RackParentCss} onClick={() => handlePopup(item[1])}>
                   <div className={labelCss}>{item[1]}</div>
                   <Image
-                  id={index}
+                  id={index.toString()}
                   src={rack}
                   alt="rack"
                   className={`${RackCss} rotate-180`}

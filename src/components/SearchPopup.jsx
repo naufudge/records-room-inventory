@@ -14,9 +14,13 @@ const SearchPopup = () => {
   useEffect(()=> {
     const getRecords = async () => {
       try {
-        const response = await axios.get('api/rack')
-        const records = response.data.records
-        setRackDetails(records)
+        const response = await axios.get('http://10.12.29.68:8000/racks/')
+        const records = response.data
+        let results = {}
+        records.filter((item) => {
+          results[item.rack.toLowerCase()] = item.records
+        })
+        setRackDetails(results)
       } catch (error) {
         console.log(error.message)
       }
