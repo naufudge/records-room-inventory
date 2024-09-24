@@ -4,10 +4,7 @@ import axios from 'axios'
 import localFont from 'next/font/local';
 import { Josefin_Sans, Poppins, Roboto } from 'next/font/google';
 import React, { useEffect, useState } from 'react'
-
-function range(start: number, end: number) {
-  return Array(end - start + 1).fill(0).map((_, index) => start + index)
-}
+import RackSearch from '../../../components/RackSearch';
 
 const RacksList = [
   "r-9-a", "r-10-a", "r-7-b",
@@ -43,6 +40,10 @@ const josefin_bold = Josefin_Sans({ weight: "600", subsets: ['latin'] })
 const poppins = Poppins({weight: "600", subsets: ["latin"]})
 const farumaFont = localFont({src: "../../../../public/assets/fonts/Faruma.otf"})
 
+function range(start: number, end: number) {
+  return Array(end - start + 1).fill(0).map((_, index) => start + index)
+}
+
 const RackPage = ({
   params,
 }: {
@@ -54,14 +55,15 @@ const RackPage = ({
 
   const [rackDetails, setRackDetails] = useState<RackDetailsType>()
   const [sectionView, setSectionsView] = useState(false)
-  
+  const [searchTerm, setSearchTerm] = useState("")
+
   useEffect(() => {
     const getRackDeets = async () => {
       try {
         const response = await axios.get(`http://10.12.29.68:8000/racks/${params.rackId.toLowerCase()}/`)
         const rack: RackDetailsType = response.data
         setRackDetails(rack)
-        if (rack.records.length === 0) { setSectionsView(true) } else setSectionsView(false)
+        if (rack.records.length === 0) { setSectionsView(true) } else { setSectionsView(false) }
         
       } catch (error) {
         console.log(error.message)
@@ -74,11 +76,15 @@ const RackPage = ({
   return (
     <div className='text-xl text-white mt-10 mx-20'>
       { rackDetails && 
-        <h1 className={`${josefin_bold.className} text-center my-10 text-3xl`}>{rackDetails.rack}</h1>
+        <div className='flex flex-col gap-5 my-8 justify-center'>
+          <h1 className={`${josefin_bold.className} text-center text-3xl`}>{rackDetails.rack}</h1>
+          
+          <RackSearch setSearch={setSearchTerm}/>
+        </div>
       }
       {rackDetails && sectionView ?
         <div>
-          <div className={`grid grid-cols-2 border-2 border-[#D4A056] ${farumaFont.className}`}>
+          <div className="grid grid-cols-2 border-2 border-[#D4A056] font-faruma">
             {range(1, 8).map((section, i) => (
               <div 
               key={i} 
@@ -90,7 +96,7 @@ const RackPage = ({
                   rackDetails.sections[section]?.records.length != 0 ? 
                   <div className='flex flex-col gap-3 text-md'>
                     {rackDetails.sections[section]?.records.map((item, index) => (
-                      <div key={index}>{item}</div>
+                      item.includes(searchTerm) && <div key={index}>{item}</div>
                     ))}
                   </div>
                   :
@@ -104,11 +110,11 @@ const RackPage = ({
         </div>
         :
         // If the rack sections are not seperated show the following
-        <div dir='rtl' className={`${farumaFont.className}`}>
+        <div dir='rtl' className="font-faruma">
           <div className='overflow-y-scroll h-[450px] border-2 p-3 border-[#D4A056]'>
             <div className='flex flex-col gap-3 text-md'>
               {rackDetails?.records.map((item, index) => (
-                <div key={index}>{item}</div>
+                item.includes(searchTerm) && <div key={index}>{item}</div>
               ))}
             </div>
           </div>

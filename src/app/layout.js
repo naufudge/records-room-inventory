@@ -5,11 +5,17 @@ import recordsImg from '../../public/assets/archive.jpg'
 import homeImg from '../../public/images/main.png'
 import SearchPopup from "../components/SearchPopup";
 import Link from 'next/link'
+import localFont from 'next/font/local'
 
 const inter = Inter({ subsets: ['latin'] })
-const poppins = Poppins({ weight: "400", subsets: ['latin'] })
+const poppins = Poppins({ weight: "400", subsets: ['latin'], variable: "--font-poppins" })
 const josefin = Josefin_Sans({ weight: "300", subsets: ['latin'] })
 const josefin_bold = Josefin_Sans({ weight: "600", subsets: ['latin'] })
+
+const farumaFont = localFont({
+  src: "../../public/assets/fonts/Faruma.otf",
+  variable: "--font-faruma"
+})
 
 export const metadata = {
   title: 'Records Room Inventory',
@@ -18,7 +24,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${farumaFont.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&display=swap" rel="stylesheet" /> 

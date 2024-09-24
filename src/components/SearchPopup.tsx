@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import localFont from 'next/font/local';
 import { Search } from 'lucide-react';
 import axios from 'axios';
@@ -9,74 +9,69 @@ const farumaFont = localFont({ src: '../../public/assets/fonts/Faruma.otf' })
 
 const SearchPopup = () => {
   const [popup, showPopup] = useState(false);
-  const [rackDetails, setRackDetails] = useState(null)
+  const [records, setRecords] = useState<string[]>()
+  
 
   useEffect(()=> {
     const getRecords = async () => {
       try {
-        const response = await axios.get('http://10.12.29.68:8000/racks/')
-        const records = response.data
-        let results = {}
-        records.filter((item) => {
-          results[item.rack.toLowerCase()] = item.records
-        })
-        setRackDetails(results)
+        const response = await axios.get('http://10.12.29.68:8000/records/all/')
+        const records: string[] = response.data
+        setRecords(records)
       } catch (error) {
         console.log(error.message)
       }
     }
-    if (!rackDetails) getRecords();
+    if (!records) getRecords();
     if (popup) {
       document.body.classList.add("overflow-y-hidden")
     } else {
       document.body.classList.remove("overflow-y-hidden")
     }
-  }, [rackDetails, popup])
+  }, [records, popup])
 
   return (
     <div>
-      {popup && rackDetails && <SearchClick show={popup} close={showPopup} racks={rackDetails} />}
+      {popup && records && <SearchClick show={popup} close={showPopup} records={records} />}
       <div className='relative'>
         <div className='absolute top-0 right-0 mr-5'>
           <div className='p-3 rounded-full transition duration-150 hover:bg-slate-400 hover:cursor-pointer'>
             <Search color='#ffffff' onClick={() => {showPopup(!popup)}} />
           </div>
         </div>
-        
       </div>
     </div>
   )
 }
 
-const SearchClick = ({ show, close, racks }) => {
+const SearchClick = ({ show, close, records }: {show: boolean, close: Dispatch<SetStateAction<boolean>>, records: string[]}) => {
   if (!show) return null;
   const [reverseRackDetails, setReverseRackDetails] = useState({})
-  const [Records, setRecords] = useState([])
   const [Results, setResults] = useState([])
-  const handlePopupClose = (e) => { if (e.target.id === "popup-background") close(false) }
+  const handlePopupClose = (e: any) => { if (e.target.id === "popup-background") close(false) }
 
-  useEffect(() => {
-    const formatRackDetails = () => {
-      let records = []
-      let reverse_rackDetails = {}
-        for (const [key, value] of Object.entries(racks)) {
-          value.filter((item) => {
-            records.push(item);
-            reverse_rackDetails[item] = key;
-          })
-        }
-        setRecords(records);
-        setReverseRackDetails(reverse_rackDetails);
-    }
+  // useEffect(() => {
+  //   const formatRackDetails = () => {
+  //     let records = []
+  //     let reverse_rackDetails = {}
+  //       for (const [key, value] of Object.entries(racks)) {
+  //         value.filter((item) => {
+  //           records.push(item);
+  //           reverse_rackDetails[item] = key;
+  //         })
+  //       }
+  //       setRecords(records);
+  //       setReverseRackDetails(reverse_rackDetails);
+  //   }
 
-    if (racks && Records.length === 0) formatRackDetails();
-  }, [Records, reverseRackDetails])
+  //   if (racks && Records.length === 0) formatRackDetails();
+  // }, [Records, reverseRackDetails])
 
   const search_handler = (searchTerm) => {
     console.log(searchTerm)
     let results = []
-    if (Records) {
-      Records.filter((item)=> {
+    if (records) {
+      records.filter((item)=> {
         if(item.startsWith(searchTerm) || item.includes(searchTerm)) {
           results.push(item);
         } else if (item.includes(searchTerm)) {
